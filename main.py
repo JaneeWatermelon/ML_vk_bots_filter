@@ -41,12 +41,6 @@ def some_infos(dataset: pd.DataFrame):
     print(missing_ratio.sort_values(ascending=False))
     print()
 
-    # Дубликаты
-    stringed_users, stringed_cols = prepare_complex_cols(dataset, to="string")
-    dups = stringed_users.duplicated()
-    print(f"Кол-во дубликатов: {dups.sum()}")
-    print()
-
     return dataset
 
 def standart_and_fill_data(dataset: pd.DataFrame):
@@ -104,8 +98,6 @@ class MutalInfo:
             X, mi_scores, drop_cols = MutalInfo.prepare_mi_scores(X, mi_scores)
         MutalInfo.show_mi_scores(mi_scores)
 
-        print(X[mi_scores.index])
-
         return X, y, drop_cols
 
 class PrincipalComponentAnalysis:
@@ -148,6 +140,7 @@ class PrincipalComponentAnalysis:
                 columns=features
             )
         )
+        set_visual_default()
         custom_heatmap(
             pca_loadings,
             title="Нагрузки главных компонент",

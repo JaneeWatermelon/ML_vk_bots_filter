@@ -171,7 +171,7 @@ class FeaturesMaderCustom:
         used_cols = ["counters_clips_views", "counters_clips_likes", "counters_clips"]
             
         dataset[name] = (dataset["counters_clips_views"] / 10 + dataset["counters_clips_likes"])
-        dataset[name] = dataset[name] / dataset["counters_clips"].apply(lambda x: max(np.log(x), 1))
+        dataset[name] = (dataset[name] / dataset["counters_clips"].apply(lambda x: max(x, 1))).apply(lambda x: np.log(max(x, 1))).round(2)
         dataset[name] = dataset[name].round(2)
         
         return dataset[name], used_cols
@@ -202,7 +202,7 @@ class FeaturesMaderCustom:
         used_cols = ["counters_posts", "counters_photos"]
             
         dataset[used_cols] = dataset[used_cols].map(lambda x: max(x, 1))
-        dataset[name] = (dataset["counters_photos"] / dataset["counters_posts"]).apply(lambda x: max(np.log(x), 1)).round(2)
+        dataset[name] = (dataset["counters_photos"] / dataset["counters_posts"].apply(lambda x: max(x, 1))).apply(lambda x: np.log(max(x, 1))).round(2)
         
         return dataset[name], used_cols
 

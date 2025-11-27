@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from core.base import get_low_disp_features, prepare_drop, prepare_null, save_dataset
+from core.base import get_low_disp_features, prepare_complex_cols, prepare_drop, prepare_null, save_dataset
 from core.feature_engineering import FeaturesModifier, FeaturesMaderBase, FeaturesMaderCustom, make_new_features, replace_some_features
 from core.vars import DATASETS_ROOT, FeatureGroups
 
@@ -49,6 +49,10 @@ def prepare_dataset(dataset: pd.DataFrame):
     dataset = dataset.dropna(subset=["is_bot"])
     dataset = prepare_drop(dataset, columns=FeatureGroups.DROP_COLS.value)
 
+    stringed_df, stringed_cols = prepare_complex_cols(dataset, to="string")
+    dups = stringed_df.duplicated()
+    dataset = prepare_drop(dataset, rows=dataset[dups].index)
+
     dataset = FeaturesMaderCustom.make_counters_features(dataset)
     dataset = FeaturesMaderCustom.make_personal_features(dataset)
 
@@ -65,6 +69,9 @@ def prepare_dataset(dataset: pd.DataFrame):
 
     dataset = prepare_drop(dataset, columns=drop_cols)
     dataset = prepare_null(dataset)
+
+    bool_cols = dataset.select_dtypes(bool).columns
+    dataset[bool_cols] = dataset[bool_cols].astype(int)
     
     save_dataset(dataset, file_name="prepared_users.json")
     save_dataset(dataset, file_name="prepared_users.xlsx")

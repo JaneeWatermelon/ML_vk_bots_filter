@@ -141,7 +141,8 @@ def custom_heatmap(
         center=0,
         vmin=vmin, 
         vmax=vmax,
-        ax=ax
+        ax=ax,
+        # annot_kws={"size":6}
     )
 
     yticks = dataset.index.tolist()

@@ -204,7 +204,7 @@ def get_high_corr_pairs(dataset: pd.DataFrame, alpha: float = 0.9, verbose: bool
             if abs(corr_val) >= alpha:
                 corr_drop_cols.append((col, component.index[i], corr_val))
                 if verbose:
-                    print(f"{col} - {component.index[i]} | corr_val: {corr_val}")
+                    print(f"{col} - {component.index[i]} | corr_val: {round(corr_val, 3)}")
     
     return corr_drop_cols
 
