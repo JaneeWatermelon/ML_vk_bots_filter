@@ -182,6 +182,32 @@ def extract_features_by_start(dataset: pd.DataFrame, start: str):
             result.append(col)
     return result
 
+def get_low_disp_features(dataset: pd.DataFrame, alpha: float = 0.98) -> pd.DataFrame:
+    low_disp_cols = []
+
+    for col in dataset.columns:
+        norm_value_counts = dataset[col].value_counts(normalize=True).sort_values(ascending=False)
+        most_frequent = norm_value_counts.iloc[0]
+        if most_frequent >= alpha:
+            low_disp_cols.append(col)
+    
+    return dataset[low_disp_cols]
+
+def get_high_corr_pairs(dataset: pd.DataFrame, alpha: float = 0.9, verbose: bool = False) -> list[tuple[str, str, float]]:
+    n = len(dataset)
+    corr_drop_cols = []
+
+    for k, col in enumerate(dataset.columns):
+        component = dataset[col]
+        for i in range(k+1, n):
+            corr_val = component.iloc[i]
+            if abs(corr_val) >= alpha:
+                corr_drop_cols.append((col, component.index[i], corr_val))
+                if verbose:
+                    print(f"{col} - {component.index[i]} | corr_val: {corr_val}")
+    
+    return corr_drop_cols
+
 COLS_TO_RENAME = {
     "friends_count": "counters_friends"
 }

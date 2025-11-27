@@ -6,7 +6,7 @@ import enum
 
 DATASETS_ROOT = "datasets" # место, где находятся и сохраняются все датасеты
 ASSETS_ROOT = "../assets" # место, где находятся все статические файлы (например фото графиков)
-NOW_YEAR = 2024 # год сборки исходного датасета
+NOW_YEAR = 2025 # год сборки исходного датасета
 AGE_LIMIT = 80 # максимальный адекватный возраст
 
 # Эти переменные указывают пути к некоторым библиотекам
@@ -85,7 +85,6 @@ class ExplainCategories(enum.Enum):
 class NewFeaturesNames(enum.Enum):
     FULLNESS = "fullness"
     CONTENT_ACTIVITY = "content_activity"
-    POSTS_INTERVAL = "posts_interval"
 
 class BulkFeatures(enum.Enum):
     ACTIVITY_INFOS = [
@@ -102,7 +101,7 @@ class BulkFeatures(enum.Enum):
         "about",
         "status",
 
-        "personal",
+        # "personal",
         "relatives",
         "crop_photo",
 
@@ -110,7 +109,6 @@ class BulkFeatures(enum.Enum):
         "city",
 
         "home_phone",
-        # "mobile_phone",
 
         "schools",
         "universities",
@@ -131,43 +129,97 @@ class BulkFeatures(enum.Enum):
         "can_write_private_message",
     ]
 
-# Список колонок на удаление (часть 1, пункт 5)
-FEATURES_TO_REMOVE = [
-    "_id",
-    'blacklisted', 'blacklisted_by_me', 'friend_status', 'is_friend',
+class FeatureGroups(enum.Enum):
+    DROP_COLS = [
+        # Поля, связанные непосредственно с аккаунтом, который собирал информацию
+        'common_count', 
+        'is_favorite',
+        'friend_status', 
+        'is_friend',
+        'is_hidden_from_feed',
 
-    'is_no_index', 'online', 'trending', 
-    # 'wall_comments',
+        'id', 
+        'online', 
+        'online_app',
+        'skype', 
+        'status_audio',
 
-    'occupation', 'military', 'maiden_name',
+        'university',
+        'university_name', 
+        'faculty', 
+        'faculty_name', 
+        'graduation',
+        'education_form', 
+        'education_status', 
+    ]
 
-    'screen_name', 'names_status',
+    EXISTS_COLS = [
+        'nickname', 
+        'maiden_name', 
+        'domain', 
+        'status', 
+        'first_name',
+        'last_name', 
+        'city', 
+        'photo_id', 
+        'interests', 
+        'books', 
+        'tv', 
+        'quotes', 
+        'about', 
+        'games',
+        'movies', 
+        'activities', 
+        'music',
+        'crop_photo',
+        'home_town', 
+        'relation_partner',
 
-    'photo_id', 'crop_photo', 'photo_100', 'photo_200', 'photo_200_orig',
-    'photo_400_orig', 'photo_50', 'photo_max', 'photo_max_orig',
+        'deactivated',
+    ]
 
-    'verified', 'online_app', 'online_mobile', 'relation_partner', 'status_audio', 'country',
-    'education', 'connections', 'contacts', 'exports', 'is_favorite', 'is_service', 'lists', 'timezone',
+    COMPLEX_COLS = [
+        'counters', 
+        'personal', 
 
-    'schools',
+        'home_phone', 
+        'site',
+        'occupation',
+        'bdate',
+        'last_seen', 
+        'screen_name', 
+        'relation', 
+        
+        'career', 
+        'military',
+        'universities', 
+        'schools', 
+        'relatives', 
+    ]
 
-    'universities', 'university', 'faculty', 'university_name',
-    'education_form', 'education_status', 'faculty_name', 'graduation',
+    DONE_COLS = [
+        'has_photo',
+        'has_mobile',
+        'can_post', 
+        'can_see_all_posts',
+        'can_see_audio', 
+        'can_write_private_message', 
+        'can_send_friend_request',
+        'can_be_invited_group',
+        'is_verified', 
+        'is_closed',
+        'sex',
+        'verified', 
+        'can_access_closed', 
+        'followers_count', 
+        'is_bot', 
+    ]
 
-    'last_updated_x', 'last_updated_y', 'downloaded_at',
-
-    #,'counters_albums', 'counters_audios', 'counters_followers', 'counters_gifts',
-    #'counters_groups', 'counters_pages', 'counters_photos', 'counters_subscriptions',
-    #'counters_user_photos', 'counters_videos', 'counters_video_playlists',
-    #'counters_clips_followers', 'counters_clips_views', 'counters_clips_likes',
-    #'counters_posts', 'counters_articles', 'counters_clips',
-
-    'can_send_friend_request', 'can_access_closed', 'can_be_invited_group', 'can_post',
-    'can_see_all_posts', 'can_see_audio', 'can_write_private_message',
-
-    #'has_mobile','home_phone', 
-    'skype', 'is_hidden_from_feed',
-]
+    CATEGORIAL_COLS = [
+        'sex',
+        'bdate',
+        'occupation',
+    ]
 
 if __name__ == "__main__":
     print(ExplainCategories.RELATION_NEW.value[1])
